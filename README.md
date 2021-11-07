@@ -2,7 +2,7 @@
 
 This project was made by me in about 10 hours (using a modified ESP8266WebServer template), feel free to make your own! (it will probably take 0.5h-2h to make)
 
-Some files didn't fit into the 3MB of flash, so if you know how to fit them in - a PR would be awesome!
+Some files didn't fit into the 3MB of flash, so if you know how to fit them in - a PR would be awesome! Oh and if you have any suggestions or improvements, don't hesitate to open an issue or a PR as well!
 
 ## Requirements
 
