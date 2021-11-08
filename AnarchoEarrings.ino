@@ -29,25 +29,11 @@ ESP8266WebServer server(80);
 #include "builtinfiles.h"
 
 
-void httpDefault() // redirect to the main page
+void handleRedirect() // redirect to the main page
 {
   server.sendHeader("Location", "http://anarchy.lan/index.html", true);
   server.send(302, "text/plain", "");
-  server.client().stop();
 }
-
-// ===== Simple functions used to answer simple GET requests =====
-
-// This function is called when the WebServer was requested without giving a filename.
-// This will redirect to the file index.html when it is existing otherwise to the built-in $upload.htm page
-void handleRedirect() {
-  TRACE("Redirect...");
-  String url = "/index.html";
-  // honestly not sure if this is needed but this was left from the example so i won't touch it
-  server.sendHeader("Location", "http://anarchy.lan"+url, true);
-  server.send(302);
-} // handleRedirect()
-
 
 // This function is called when the sysInfo service was requested.
 void handleSysInfo() {
@@ -99,11 +85,6 @@ void setup(void) {
 
   TRACE("Register service handlers...\n");
 
-  // serve a built-in htm page
-  server.on("/$upload.htm", []() {
-    server.send(200, "text/html", FPSTR(uploadContent));
-  });
-
   // register a redirect handler when only domain name is given.
   server.on("/", HTTP_GET, handleRedirect);
 
@@ -111,13 +92,14 @@ void setup(void) {
   server.on("/$sysinfo", HTTP_GET, handleSysInfo);
 
   // enable CORS header in webserver results
-  //server.enableCORS(true);
+  server.enableCORS(true);
+
   TRACE("Serving static...\n");
   // serve all static files
   server.serveStatic("/", LittleFS, "/");
   TRACE("Served...\n");
   // handle cases when file is not found
-  server.onNotFound(httpDefault);
+  server.onNotFound(handleRedirect);
   TRACE("Registered onNotFound...\n");
   server.begin();
   TRACE("Server begun...");
